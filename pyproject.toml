@@ -1,0 +1,41 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "mizan-ledger"
+version = "0.1.1"
+description = "Declare your agent's confidence before the task, commit a salted hash, score honesty against real outcomes. Local-first, hash-only."
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
+requires-python = ">=3.9"
+authors = [{ name = "QANTS" }]
+keywords = ["calibration", "agents", "brier", "commitment", "pytest-plugin"]
+dependencies = []
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "Framework :: Pytest",
+  "Development Status :: 3 - Alpha",
+]
+
+[project.urls]
+Homepage = "https://qants-site.qants.workers.dev"
+SeedAgents = "https://qants-site.qants.workers.dev/seed-agents"
+
+[project.optional-dependencies]
+dev = ["pytest>=7"]
+
+[project.scripts]
+mizan-ledger = "mizan_ledger.cli:main"
+
+[project.entry-points.pytest11]
+mizan_ledger = "mizan_ledger.pytest_plugin"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+addopts = "-p no:cacheprovider"

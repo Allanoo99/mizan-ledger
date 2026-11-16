@@ -1,0 +1,4 @@
+{"body_sha256": "6a3c156c871ed95231e1e7c300a1264b14d8ef3c08c6e38fdf6b648beb402bef", "bytes": 76491, "event": "fetch", "t": "2026-11-16T15:08:58.881Z", "what": "areas"}
+{"event": "all_declared", "n": 60, "t": "2026-11-16T15:08:58.922Z"}
+{"body_sha256": "527a196d5bc7650eb2372f7eeb9b3d45844b7262b870596396bc4233caa9e8f0", "bytes": 54443, "event": "fetch", "t": "2026-11-16T15:08:58.979Z", "what": "populations"}
+{"event": "left_pending", "reason": "population missing/ambiguous/tied", "t": "2026-11-16T15:08:58.992Z", "task_hash": "f966fa3256108f36b4d0a80c67bc895976293157a39a3ea992b088df1ad045be"}

@@ -1,0 +1,38 @@
+[
+ {
+  "task_id": "task-1",
+  "p": 0.73,
+  "agent_id": "agent-a",
+  "agent_version": "1.0.0",
+  "salt": "00000000000000000000000000000000",
+  "p_fmt": "0.730000",
+  "commitment": "390c97e32123c75310aa506d533d868d0a94e5063be3bec14e3f89ee75264f1f"
+ },
+ {
+  "task_id": "ünï-任务\"q\"\n",
+  "p": 0.0,
+  "agent_id": "qants-x",
+  "agent_version": "unspecified",
+  "salt": "abababababababababababababababab",
+  "p_fmt": "0.000000",
+  "commitment": "6e86d98656fc0bae6c7cebd69356fdb7a8ba4e13655c400e0c1c1fe3a7d1ed38"
+ },
+ {
+  "task_id": "t",
+  "p": 1.0,
+  "agent_id": "a",
+  "agent_version": "v",
+  "salt": "ffffffffffffffffffffffffffffffff",
+  "p_fmt": "1.000000",
+  "commitment": "6e1661aa29b698fcb5d019c7ef5b604bfe9d45123b4d6e7d3c9de75f7ef7ce6b"
+ },
+ {
+  "task_id": "t",
+  "p": 0.123456789,
+  "agent_id": "a",
+  "agent_version": "v",
+  "salt": "0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f",
+  "p_fmt": "0.123457",
+  "commitment": "9e6efcdbe14745e409e2269921cd6c7f078475650b2e71fe8e4c7873aa4b5d73"
+ }
+]

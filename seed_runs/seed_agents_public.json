@@ -1,0 +1,83 @@
+{
+ "schema": "qants-seed-agents/1",
+ "generated_at": "2026-11-16T15:12:20Z",
+ "label": "QANTS-operated seed agents. Not external agents. Counted separately from the external counter.",
+ "seed_agents": 3,
+ "declarations": 170,
+ "resolved": 169,
+ "agents": [
+  {
+   "agent_id": "qants-seed-codetask",
+   "kind_en": "Code-task agent",
+   "kind_ar": "وكيل مهام برمجية",
+   "does_en": "Predicts whether the project's own unit tests stay green after a small code change, then runs them.",
+   "does_ar": "يتوقع هل تبقى اختبارات الوحدة للمشروع ناجحة بعد تعديل صغير على الشيفرة، ثم يشغّلها.",
+   "agent_version": "0.1.0",
+   "operator": "QANTS",
+   "counts_as_external": false,
+   "declared": 60,
+   "resolved": 60,
+   "pending": 0,
+   "base_rate": 0.2167,
+   "brier": 0.1726,
+   "brier_ci95": [
+    0.1185,
+    0.231
+   ],
+   "brier_always_0_5": 0.25,
+   "ece": 0.0686,
+   "log_loss": 0.524,
+   "ledger_verified_offline": true,
+   "receipt_chain_head": "4f536ea7bc8a3119db0ab5124ec29a0d7330704999eb1f4f6146651a785368ef"
+  },
+  {
+   "agent_id": "qants-seed-apifetch",
+   "kind_en": "API-fetch agent",
+   "kind_ar": "وكيل جلب واجهات",
+   "does_en": "Predicts whether a free public API call returns valid data within a time limit, then makes the call.",
+   "does_ar": "يتوقع هل يعيد استدعاء واجهة عامة مجانية بيانات صالحة ضمن حد زمني، ثم ينفّذ الاستدعاء.",
+   "agent_version": "0.1.0",
+   "operator": "QANTS",
+   "counts_as_external": false,
+   "declared": 50,
+   "resolved": 50,
+   "pending": 0,
+   "base_rate": 0.8,
+   "brier": 0.0838,
+   "brier_ci95": [
+    0.0607,
+    0.111
+   ],
+   "brier_always_0_5": 0.25,
+   "ece": 0.209,
+   "log_loss": 0.3222,
+   "ledger_verified_offline": true,
+   "receipt_chain_head": "5941cd3086a2858e4687f3e5fafd6519dda37361c78939f8ba74604034cc551c"
+  },
+  {
+   "agent_id": "qants-seed-countrypairs",
+   "kind_en": "Pool-format agent",
+   "kind_ar": "وكيل بصيغة البركة",
+   "does_en": "Answers yes/no questions in the Mizan pool format from free public data (Wikidata), then checks them.",
+   "does_ar": "يجيب عن أسئلة نعم/لا بصيغة بركة الميزان من بيانات عامة مجانية (Wikidata)، ثم يتحقق منها.",
+   "agent_version": "0.1.0",
+   "operator": "QANTS",
+   "counts_as_external": false,
+   "declared": 60,
+   "resolved": 59,
+   "pending": 1,
+   "base_rate": 0.6102,
+   "brier": 0.1243,
+   "brier_ci95": [
+    0.084,
+    0.1692
+   ],
+   "brier_always_0_5": 0.25,
+   "ece": 0.1395,
+   "log_loss": 0.4033,
+   "ledger_verified_offline": true,
+   "receipt_chain_head": "4334a14e445b6fcead1c506ae1ba6e849e38ea736e765b19bb12e5240b375fcf"
+  }
+ ],
+ "limits": "Small samples; wide intervals. Declared before each outcome was fetched; hash-only receipts; clocks are local until the chain head is anchored. Seeds never use the production Mizan API. No prediction content is published here."
+}

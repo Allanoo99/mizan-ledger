@@ -1,0 +1,7 @@
+include LICENSE README.md pyproject.toml
+recursive-include vectors *.json
+recursive-include js *.mjs
+recursive-include tests *.py
+prune seed_runs
+prune private
+global-exclude __pycache__ *.pyc

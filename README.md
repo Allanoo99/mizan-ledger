@@ -1,0 +1,90 @@
+# mizan-ledger
+
+Declare how confident your agent is **before** a task, commit a salted hash of that declaration, then score honesty against the **real outcome** (your own tests, evals or checks). Local-first, hash-only, verifiable offline.
+
+> Status: **v0.1.1, early alpha** by QANTS. On PyPI (not on npm). MIT licensed (see `LICENSE`). No network access, no telemetry, no dependencies in the core library.
+
+## Why
+
+Agents often report success with the same unearned confidence whether they are right or wrong. A calibration ledger asks one question: when the agent says "80% sure", is it right about 80% of the time? Brier score and ECE answer that. The commitment makes sure the declaration was fixed before the outcome was known.
+
+## Install
+
+```
+pip install mizan-ledger
+```
+
+Or from a local checkout:
+
+```bash
+pip install -e .            # Python >= 3.9, pytest only for development
+```
+
+## 30-second example
+
+```python
+from mizan_ledger import Ledger
+
+led = Ledger("ledger/", private_path="private/")          # public dir is safe to share; private dir is not
+led.declare("fix-bug-421", 0.80, agent_id="my-agent", version="1.2.0")   # hash-only receipt, timestamped
+# ... run the task, run the tests ...
+led.resolve("fix-bug-421", outcome=True)                  # reveals the opening, scores it
+
+print(led.summary("my-agent"))     # n, Brier + 95% interval, ECE, log loss, accuracy (Wilson), coverage
+```
+
+```bash
+mizan-ledger verify ledger/        # offline check of hash chains, openings and scores
+```
+
+## What gets recorded
+
+| File | Visibility | Contents |
+|---|---|---|
+| `receipts.jsonl` | public | `agent_id`, `agent_version`, `commitment` (SHA-256), `declared_at`, hash-chain link |
+| `resolutions.jsonl` | public after resolution | outcome, opening (`task_id`, `p`, `salt`), squared error, log loss, hash-chain link |
+| `private/openings.jsonl` | **private** (mode 600) | the same openings, kept until the task is resolved |
+
+Commitment = `SHA-256(canonical_json({agent_id, agent_version, p, salt, schema, task_id}))` with `p` as a fixed 6-decimal string, a fresh 128-bit random salt per declaration, sorted keys and no whitespace. Shared test vectors (`vectors/commitments.json`) are checked by both the Python and the JavaScript implementation.
+
+## Guarantees and honest limits
+
+- A declaration cannot be replaced or re-resolved. Deleting or editing a record breaks the hash chain and `verify` fails.
+- **Coverage is reported.** Declared, resolved and pending are all counted, so you cannot quietly drop the bad ones. Anything unresolved shows as `pending`.
+- **Timestamps are your local clock.** They prove order only if the chain head is anchored somewhere independent (publish `chain_head()`, timestamp it, or write it to a transparency log). Without that, a ledger owner could rebuild the whole chain after the fact.
+- The library cannot tell whether the outcome you pass to `resolve` is honest. Use an outcome source you do not control through the agent (test results, an external check).
+- Small samples give wide intervals; ECE is biased upward for small n. The summary prints the interval and `n`; read them.
+- Scores are about calibration, not about whether the agent is good, safe or secure.
+
+## Scores (`mizan_ledger.metrics`)
+
+Brier (mean squared error), log loss (p clipped to [0.01, 0.99], same as the Mizan API), ECE with 10 equal-width bins, reliability table, accuracy with a Wilson 95% interval, and a deterministic percentile-bootstrap 95% interval for Brier. The always-0.5 baseline Brier is 0.25.
+
+## Adapters
+
+| Adapter | Status |
+|---|---|
+| **pytest plugin** (`mizan_ledger.pytest_plugin`): `@pytest.mark.confidence(0.9)` declares before the test body, pass/fail resolves it. Run with `pytest --mizan-ledger-dir .mizan --mizan-agent-id my-agent`. | Tested here (pytester). |
+| **Generic trace evaluator** (`mizan_ledger.adapters.trace_eval`): plain-dict functions to declare from a trace's confidence field and resolve from its score. | Unit-tested with synthetic dicts only. **Not tested against Arize Phoenix, Braintrust or LangSmith**; their evaluator signatures were not verified. Treat as a stub. |
+| **JavaScript shim** (`js/mizan-ledger.mjs`): commitment, declare, verify opening. Node >= 18, `node:crypto` only. | Tested against the shared vectors (`node --test js/test.mjs`). It does not implement the file ledger. |
+
+No CI workflow file is included in this repository.
+
+## Tests
+
+```bash
+python3 -m pytest -q          # Python suite
+node --test js/test.mjs       # JS shim vs shared vectors
+```
+
+## Seed agents
+
+`seeds/` holds three demonstration agents operated by QANTS (ids start with `qants-`). They use only free public data and local ledgers, never the production Mizan API, and they are always shown separately from external agents. Their raw ledgers are in `seed_runs/` and can be checked with `mizan-ledger verify seed_runs/<agent>`.
+
+## Security notes
+
+Keep `private/` out of version control and backups you share. The salt is what stops guessing of low-entropy declarations.
+
+## License
+
+MIT, see `LICENSE`. Copyright (c) 2026 QANTS.
