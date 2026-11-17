@@ -1,12 +1,14 @@
 """Scoring helpers. Pure functions on lists of (p, outcome) with outcome in {0, 1}.
 
 Conventions match the Mizan API: log loss clips p to [0.01, 0.99], ECE uses 10 equal-width bins.
+Rating rule: an agent is not "rated" before MIN_RATED_N (50) resolved answers.
 """
 from __future__ import annotations
 import math, random
 from typing import Iterable, Sequence
 
 LOG_LOSS_CLIP = (0.01, 0.99)
+MIN_RATED_N = 50
 
 
 def _pairs(pairs: Iterable) -> list:
@@ -88,13 +90,43 @@ def brier_interval(pairs, reps: int = 2000, seed: int = 20261116) -> dict:
     return {"brier": mean, "ci95": [means[int(0.025 * reps)], means[int(0.975 * reps) - 1]], "method": f"percentile bootstrap, {reps} reps, seed {seed}", "n": n}
 
 
-def summarize(pairs) -> dict:
+def rating(n_resolved: int, min_n: int = MIN_RATED_N) -> dict:
+    """Sample-size gate. Below min_n resolved answers the agent is 'unrated' (insufficient data)."""
+    n_resolved = int(n_resolved)
+    rated = n_resolved >= min_n
+    return {"status": "rated" if rated else "unrated", "rated": rated, "reason": None if rated else "insufficient_data",
+            "n_resolved": n_resolved, "min_n": min_n,
+            "rule": f"rated only after >= {min_n} resolved answers; below that, scores are shown but no rating or ranking is given"}
+
+
+def brier_prior_baseline(pairs, prior: float = 0.5) -> dict:
+    """Brier of a no-skill forecaster that only uses information available before each item.
+
+    For item i (in resolution order) the baseline forecast is the base rate of items 0..i-1
+    (strictly earlier), or `prior` for the first item. Unlike the in-sample best constant it does
+    not use hindsight, so it is a fair "did the agent beat a naive forecaster" comparison.
+    """
+    xs = _pairs(pairs)
+    if not xs: raise ValueError("no data")
+    if not 0.0 <= prior <= 1.0: raise ValueError("prior must be in [0, 1]")
+    tot, ones = 0.0, 0
+    for i, (_, y) in enumerate(xs):
+        q = ones / i if i else prior
+        tot += (q - y) ** 2
+        ones += y
+    return {"brier": tot / len(xs), "method": f"rolling base rate of strictly earlier resolved items (first item uses prior {prior})", "n": len(xs)}
+
+
+def summarize(pairs, min_rated_n: int = MIN_RATED_N) -> dict:
+    """Scores for resolved pairs, in resolution order. Counts of declared/pending are added by the caller."""
     xs = _pairs(pairs)
     n = len(xs)
     if not n:
-        return {"n": 0}
+        return {"n": 0, "rating": rating(0, min_rated_n)}
     base = sum(y for _, y in xs) / n
     bi = brier_interval(xs)
+    prior = brier_prior_baseline(xs)
+    rt = rating(n, min_rated_n)
     return {
         "n": n,
         "base_rate": base,
@@ -102,10 +134,18 @@ def summarize(pairs) -> dict:
         "brier_ci95": bi["ci95"],
         "brier_ci_method": bi["method"],
         "brier_always_0.5": 0.25,
-        "brier_base_rate_hindsight": base * (1 - base),  # in-sample best constant; a ceiling for "no skill" claims
+        "brier_prior_baseline": prior["brier"],
+        "brier_prior_baseline_method": prior["method"],
+        # in-sample best constant: uses the outcomes it is scored on (hindsight). Shown for reference only;
+        # never use it as the baseline an agent must beat.
+        "brier_base_rate_hindsight": base * (1 - base),
+        "brier_base_rate_hindsight_note": "in-sample hindsight, reference only; not a fair baseline",
+        "beats_prior_baseline": (bi["brier"] < prior["brier"]) if rt["rated"] else None,
         "log_loss": log_loss(xs),
         "ece": ece(xs),
         "accuracy": accuracy_wilson(xs),
         "reliability": reliability_table(xs),
-        "note": "With small n the intervals are wide; ECE is biased upward for small n.",
+        "rating": rt,
+        "note": "With small n the intervals are wide; ECE is biased upward for small n. "
+                "No baseline comparison is claimed before the rating threshold.",
     }

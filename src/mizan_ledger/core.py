@@ -52,7 +52,18 @@ def _now() -> str:
 
 
 def _parse(ts: str) -> _dt.datetime:
-    return _dt.datetime.fromisoformat(ts.replace("Z", "+00:00"))
+    """Parse an ISO-8601 timestamp into an aware datetime. Compare parsed values, never strings
+    ("2026-11-17T10:00:00+02:00" is earlier than "2026-11-17T09:00:00Z"). A timestamp without
+    an offset is refused, because its instant is unknown."""
+    if not isinstance(ts, str) or not ts:
+        raise LedgerError(f"bad timestamp {ts!r}")
+    try:
+        d = _dt.datetime.fromisoformat(ts.strip().replace("Z", "+00:00").replace("z", "+00:00"))
+    except ValueError:
+        raise LedgerError(f"bad timestamp {ts!r}")
+    if d.tzinfo is None or d.utcoffset() is None:
+        raise LedgerError(f"timestamp {ts!r} has no UTC offset")
+    return d
 
 
 def _chain_hash(rec: dict, key: str) -> str:
@@ -82,6 +93,13 @@ def _append_jsonl(path: Path, rec: dict, private: bool = False) -> None:
         f.flush(); os.fsync(f.fileno())
     if new and private:
         os.chmod(path, 0o600)
+
+
+def _counts(declared: int, resolved: int) -> dict:
+    """Coverage is always reported: pending declarations are never hidden from a summary."""
+    return {"declared": declared, "resolved": resolved, "pending": declared - resolved,
+            "n_declared": declared, "n_resolved": resolved, "n_pending": declared - resolved,
+            "coverage": (resolved / declared) if declared else None}
 
 
 class Ledger:
@@ -116,6 +134,10 @@ class Ledger:
         """Commit to a probability of success BEFORE the outcome is known. Returns the public receipt."""
         if not task_id or not agent_id:
             raise LedgerError("task_id and agent_id are required")
+        from .safety import find_secrets
+        leaked = find_secrets({"agent_id": agent_id, "agent_version": version})
+        if leaked:   # agent_id and version are written to the public receipt
+            raise LedgerError(f"agent_id/version look like a credential ({', '.join(leaked)}); refusing to publish them")
         p = float(p_success)
         fmt_p(p)  # validates
         if self._find_opening(task_id, agent_id, version):
@@ -177,9 +199,8 @@ class Ledger:
         rcpts = [r for r in self.receipts() if (agent_id is None or r["agent_id"] == agent_id)
                  and (version is None or r["agent_version"] == version)]
         pr = self.pairs(agent_id, version)
-        out = metrics.summarize(pr) if pr else {"n": 0}
-        out.update({"declared": len(rcpts), "resolved": len(pr), "pending": len(rcpts) - len(pr),
-                    "coverage": (len(pr) / len(rcpts)) if rcpts else None})
+        out = metrics.summarize(pr)
+        out.update(_counts(len(rcpts), len(pr)))
         return out
 
     def chain_head(self) -> dict:
@@ -240,8 +261,8 @@ def verify_ledger_dir(path) -> dict:
             elif abs(r["score"]["squared_error"] - (p - y) ** 2) > 1e-9: errs.append(f"resolution seq {r['seq']}: score does not match p and outcome")
         except Exception: errs.append(f"resolution seq {r['seq']}: malformed record")
     pairs = [(float(r["opening"]["p"]), r["outcome"]) for r in resolutions if r.get("outcome") in (0, 1)]
-    summ = metrics.summarize(pairs) if pairs else {"n": 0}
-    summ.update({"declared": len(receipts), "resolved": len(resolutions), "pending": len(receipts) - len(resolutions)})
+    summ = metrics.summarize(pairs) if pairs else metrics.summarize([])
+    summ.update(_counts(len(receipts), len(resolutions)))
     return {"ok": not errs, "errors": errs, "summary": summ,
             "chain_heads": {"receipt_head": receipts[-1]["receipt_hash"] if receipts else GENESIS,
                             "resolution_head": resolutions[-1]["record_hash"] if resolutions else GENESIS}}
