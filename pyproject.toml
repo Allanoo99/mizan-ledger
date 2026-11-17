@@ -4,14 +4,14 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "mizan-ledger"
-version = "0.1.1"
+version = "0.1.2"
 description = "Declare your agent's confidence before the task, commit a salted hash, score honesty against real outcomes. Local-first, hash-only."
 readme = "README.md"
 license = "MIT"
 license-files = ["LICENSE"]
 requires-python = ">=3.9"
 authors = [{ name = "QANTS" }]
-keywords = ["calibration", "agents", "brier", "commitment", "pytest-plugin"]
+keywords = ["calibration", "agents", "brier", "commitment", "pytest-plugin", "mcp"]
 dependencies = []
 classifiers = [
   "Programming Language :: Python :: 3",
@@ -20,14 +20,18 @@ classifiers = [
 ]
 
 [project.urls]
-Homepage = "https://qants-site.qants.workers.dev"
+Homepage = "https://qants-site.qants.workers.dev/library"
+Source = "https://github.com/Allanoo99/mizan-ledger"
 SeedAgents = "https://qants-site.qants.workers.dev/seed-agents"
 
 [project.optional-dependencies]
 dev = ["pytest>=7"]
+# Optional local stdio MCP server. The core install stays dependency-free and offline.
+mcp = ["mcp>=2.3,<3; python_version >= '3.10'"]
 
 [project.scripts]
 mizan-ledger = "mizan_ledger.cli:main"
+mizan-ledger-mcp = "mizan_ledger.mcp_server:main"
 
 [project.entry-points.pytest11]
 mizan_ledger = "mizan_ledger.pytest_plugin"

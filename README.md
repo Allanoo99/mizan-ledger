@@ -1,8 +1,10 @@
 # mizan-ledger
 
+<!-- mcp-name: io.github.Allanoo99/mizan-ledger -->
+
 Declare how confident your agent is **before** a task, commit a salted hash of that declaration, then score honesty against the **real outcome** (your own tests, evals or checks). Local-first, hash-only, verifiable offline.
 
-> Status: **v0.1.1, early alpha** by QANTS. On PyPI (not on npm). MIT licensed (see `LICENSE`). No network access, no telemetry, no dependencies in the core library.
+> Status: **v0.1.2, early alpha** by QANTS. On PyPI (not on npm). MIT licensed (see `LICENSE`). No network access, no telemetry, no dependencies in the core library.
 
 ## Why
 
@@ -69,6 +71,23 @@ Brier (mean squared error), log loss (p clipped to [0.01, 0.99], same as the Miz
 | **JavaScript shim** (`js/mizan-ledger.mjs`): commitment, declare, verify opening. Node >= 18, `node:crypto` only. | Tested against the shared vectors (`node --test js/test.mjs`). It does not implement the file ledger. |
 
 No CI workflow file is included in this repository.
+
+## Local MCP server (optional)
+
+An optional stdio [MCP](https://modelcontextprotocol.io) server lets an agent host (Cursor, Claude Desktop, VS Code or any MCP client) use the ledger without leaving the machine. It needs Python >= 3.10; the core install is unchanged.
+
+```bash
+pip install "mizan-ledger[mcp]"
+```
+
+```json
+{"mcpServers": {"mizan-ledger": {"command": "mizan-ledger-mcp",
+  "env": {"MIZAN_LEDGER_DIR": ".mizan", "MIZAN_AGENT_ID": "my-agent"}}}}
+```
+
+Tools: `commit_confidence` (declare before the task), `resolve_outcome` (record the real outcome), `get_calibration` (read-only scores), `verify_ledger` (read-only offline check). Local files only: no network, no keys, no shell commands. The outcome you supply is not verified; prefer a source the agent does not control. `MIZAN_PRIVATE_DIR` (default `<MIZAN_LEDGER_DIR>/private`) holds the openings; keep it out of version control.
+
+This is not the remote `qants-diwan` MCP server on the QANTS site (Mizan benchmark and directory); that is a different product.
 
 ## Tests
 
