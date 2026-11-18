@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "mizan-ledger"
-version = "0.1.2"
+version = "0.1.3"
 description = "Declare your agent's confidence before the task, commit a salted hash, score honesty against real outcomes. Local-first, hash-only."
 readme = "README.md"
 license = "MIT"
@@ -21,7 +21,8 @@ classifiers = [
 
 [project.urls]
 Homepage = "https://qants-site.qants.workers.dev/library"
-Source = "https://github.com/Allanoo99/mizan-ledger"
+Documentation = "https://qants-site.qants.workers.dev/library.md"
+Changelog = "https://qants-site.qants.workers.dev/library"
 SeedAgents = "https://qants-site.qants.workers.dev/seed-agents"
 
 [project.optional-dependencies]
