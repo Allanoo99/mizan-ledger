@@ -22,7 +22,6 @@ classifiers = [
 [project.urls]
 Homepage = "https://qants-site.qants.workers.dev/library"
 Documentation = "https://qants-site.qants.workers.dev/library.md"
-Changelog = "https://qants-site.qants.workers.dev/library"
 SeedAgents = "https://qants-site.qants.workers.dev/seed-agents"
 
 [project.optional-dependencies]
