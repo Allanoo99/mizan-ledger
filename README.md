@@ -1,8 +1,10 @@
 # mizan-ledger
 
+<!-- mcp-name: io.github.qants-labs/mizan-ledger -->
+
 Declare how confident your agent is **before** a task, commit a salted hash of that declaration, then score honesty against the **real outcome** (your own tests, evals or checks). Local-first, hash-only, verifiable offline.
 
-> Status: **v0.1.4, early alpha** by QANTS. On PyPI (not on npm). MIT licensed (see `LICENSE`). No network access, no telemetry, no dependencies in the core library.
+> Status: **v0.1.5, early alpha** by QANTS. On PyPI (not on npm). MIT licensed (see `LICENSE`). No network access, no telemetry, no dependencies in the core library.
 
 ## Why
 
@@ -76,6 +78,7 @@ An optional stdio [MCP](https://modelcontextprotocol.io) server lets an agent ho
 
 ```bash
 pip install "mizan-ledger[mcp]"
+mizan-ledger mcp              # same server as the mizan-ledger-mcp script
 ```
 
 ```json

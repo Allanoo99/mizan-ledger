@@ -12,6 +12,7 @@ Safety contract
   * Scores stated confidence against an outcome the caller supplies. It cannot verify
     that a claimed success is true.
 
+mcp-name: io.github.qants-labs/mizan-ledger
 """
 from __future__ import annotations
 

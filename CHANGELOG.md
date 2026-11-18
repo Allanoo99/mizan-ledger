@@ -1,6 +1,10 @@
 # Changelog
 
-## 0.1.4 (prepared 2026-11-18, not yet released)
+## 0.1.5 (prepared 2026-11-18, not yet released)
+- Adds an `mcp-name` marker (`io.github.qants-labs/mizan-ledger`) so the MCP Registry can verify ownership under the QANTS organization namespace.
+- Adds a `mizan-ledger mcp` subcommand that starts the same optional stdio MCP server as the existing `mizan-ledger-mcp` script (requires `pip install "mizan-ledger[mcp]"`). If the extra is missing, the command prints an install hint and exits nonzero.
+
+## 0.1.4 (2026-11-18)
 - Metadata only. No code or behaviour change from 0.1.3.
 - Restores a Source URL now that the repository lives under the QANTS organization: `https://github.com/qants-labs/mizan-ledger`.
 - Adds an Issues URL: `https://github.com/qants-labs/mizan-ledger/issues`.

@@ -6,7 +6,7 @@ Instructions for coding agents working in this repository (convention: https://a
 
 mizan-ledger is a local calibration ledger for AI agents. You declare a confidence **before** a task, the library commits a salted SHA-256 hash of that declaration, and after the outcome it scores the ledger with Brier, ECE and log loss (plus accuracy and coverage).
 
-- Package: https://pypi.org/project/mizan-ledger/ (v0.1.4, early alpha, Python >= 3.9, MIT)
+- Package: https://pypi.org/project/mizan-ledger/ (v0.1.5, early alpha, Python >= 3.9, MIT)
 - Docs: https://qants-site.qants.workers.dev/library
 - The core library (`src/mizan_ledger/`) has no required dependencies, no network access, and no telemetry. Do not add network calls, telemetry, or required dependencies to it.
 - `seeds/` holds the three QANTS-operated demonstration agents. They are not part of the package; `seed_apifetch.py` and `seed_countrypairs.py` call free public APIs by design. Their ledgers are in `seed_runs/`.
