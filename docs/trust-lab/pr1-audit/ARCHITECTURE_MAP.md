@@ -9,7 +9,7 @@ Every figure below cites the file or URL it was read from. "Unknown" means it wa
 | Item | Value | Evidence |
 |---|---|---|
 | Version on PyPI | 0.1.1 (releases: 0.1.0, 0.1.1) | `https://pypi.org/pypi/mizan-ledger/json`, read 17 Nov 2026 |
-| Source | `github.com/Allanoo99/mizan-ledger`, default branch `main`, MIT, last push 16 Nov 2026 23:40 GMT+2 | GitHub REST `repos/Allanoo99/mizan-ledger`, read 17 Nov 2026 |
+| Source | `github.com/qants-labs/mizan-ledger`, default branch `main`, MIT, last push 16 Nov 2026 23:40 GMT+2 | GitHub REST `repos/qants-labs/mizan-ledger`, read 17 Nov 2026 |
 | CI | No `.github/` directory in the repo (contents API returns 404); README says "No CI workflow file is included" | GitHub contents API; `/workspace/mizan-ledger/README.md` |
 | Local checkout | `/workspace/mizan-ledger` (not a git working copy locally: `git log` fails) | shell check |
 | Code size | core 247 lines, metrics 111, pytest plugin 81, CLI 22, trace adapter 41 | `wc -l /workspace/mizan-ledger/src/mizan_ledger/*.py` |

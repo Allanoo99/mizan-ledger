@@ -1,6 +1,5 @@
 # mizan-ledger
 
-<!-- mcp-name: io.github.Allanoo99/mizan-ledger -->
 
 Declare how confident your agent is **before** a task, commit a salted hash of that declaration, then score honesty against the **real outcome** (your own tests, evals or checks). Local-first, hash-only, verifiable offline.
 

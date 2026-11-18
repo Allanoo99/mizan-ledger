@@ -14,7 +14,7 @@ Principle: *Trust must be demonstrated through evidence, not claimed through bra
 | `MVP_PLAN.md` | PR 1 to PR 8 with negative security tests |
 
 ## Summary
-- **Already strong:** `mizan-ledger` 0.1.1 (PyPI + `github.com/Allanoo99/mizan-ledger`, 22 tests), PAL v0.1 prototype (0.2.0.dev0, 40 tests, unpublished), 3 seed agents with 170 declarations / 169 resolved (live `/seed-agents`, offline verify ok), metrics, offline verifiers, production passports.
+- **Already strong:** `mizan-ledger` 0.1.1 (PyPI + `github.com/qants-labs/mizan-ledger`, 22 tests), PAL v0.1 prototype (0.2.0.dev0, 40 tests, unpublished), 3 seed agents with 170 declarations / 169 resolved (live `/seed-agents`, offline verify ok), metrics, offline verifiers, production passports.
 - **Main gaps:** registration with owner/`operator_type`/fingerprint; `qants-` reservation at key issuance (fixed 17 Nov 2026); PAL not published or wired; no proof engine (ledgers are local-clock only, OTS used once and still pending in the local copy); no sandbox and no `qants` CLI; three hash-chain dialects to verify without rewriting.
 - **Approach:** extend, do not replace. v1.1 is an additive layer and legacy records are read as projections, never re-hashed.
 

@@ -1,7 +1,7 @@
 # PR 1: MVP 0.1 plan, PR-sized sequence
 
 Ground rules (the founder's rules, unchanged):
-- Work on a dedicated feature branch in `github.com/Allanoo99/mizan-ledger` (proposed name `feature/trust-lab`). **No direct merge into `main`.** Merge only after the founder's explicit approval.
+- Work on a dedicated feature branch in `github.com/qants-labs/mizan-ledger` (proposed name `feature/trust-lab`). **No direct merge into `main`.** Merge only after the founder's explicit approval.
 - **No GitHub Actions changes.** The repo has no `.github/` today; this plan does not add one. "Complete CI suite" = the local suites (`python3 -m pytest -q`, `node --test js/test.mjs`), run before every PR, results pasted into the PR body.
 - Never bypass a failing test. Every PR lists changed files and remaining limits.
 - The site worker is not on GitHub. Any worker change (HTTP routes, pages) is a separate step that needs the founder's deploy approval, a backup and a rollback file.

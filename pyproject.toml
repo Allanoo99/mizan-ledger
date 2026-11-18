@@ -21,7 +21,7 @@ classifiers = [
 
 [project.urls]
 Homepage = "https://qants-site.qants.workers.dev/library"
-Source = "https://github.com/Allanoo99/mizan-ledger"
+Source = "https://github.com/qants-labs/mizan-ledger"
 SeedAgents = "https://qants-site.qants.workers.dev/seed-agents"
 
 [project.optional-dependencies]
